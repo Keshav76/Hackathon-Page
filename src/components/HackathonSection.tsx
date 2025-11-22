@@ -1,8 +1,11 @@
 import { ImageWithFallback } from "./figma/ImageWithFallback";
 import { Calendar, Users, Trophy, FileCheck, Award } from "lucide-react";
 import { Card } from "./ui/card";
+import { useNavigate } from "react-router-dom";
 
 export function HackathonSection() {
+  const navigate = useNavigate();
+
   return (
     <section className="py-20 bg-gradient-to-b from-gray-50 to-white">
       <div className="max-w-6xl mx-auto px-6">
@@ -94,7 +97,10 @@ export function HackathonSection() {
         <div className="mb-12">
           <h3 className="text-3xl mb-8 text-center">Challenge Problems</h3>
           <div className="grid md:grid-cols-3 gap-6">
-            <Card className="p-6 hover:shadow-lg transition-shadow">
+            <Card
+              className="p-6 hover:shadow-lg transition-shadow cursor-pointer"
+              onClick={() => navigate("/bone-age")}
+            >
               <div className="text-4xl mb-4">🦴</div>
               <h4 className="text-xl mb-3">Bone Age Prediction</h4>
               <p className="text-gray-600">

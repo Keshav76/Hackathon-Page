@@ -17,10 +17,10 @@ export function HeroSection() {
 
       {/* Content */}
       <div className="relative z-10 max-w-5xl mx-auto px-6 py-20 text-center text-white">
-        <div className="max-w-2xl inline-block px-4 py-2 bg-cyan-500/20 backdrop-blur-sm rounded-full border border-cyan-400/30 mb-8">
+        <div className="max-w-2xl inline-block px-4 py-2 bg-white backdrop-blur-sm rounded-full border border-cyan-400/30 mb-8">
           <p className="text-cyan-200">
             <img
-              src="NHA-IITK-ICMR-Hackathon.png"
+              src="/dhs/hackathon/NHA-IITK-ICMR-Hackathon.png"
               alt="NHA-IITK-ICMR-Hackathon"
               className="w-full h-full object-cover"
             />
