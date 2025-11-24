@@ -79,26 +79,22 @@ const BoneAgeDataProvider = () => {
           <StatCard
             icon={<FileImage className="text-blue-600" />}
             label="Total Images"
-            value="400+"
-            subtext="Male & Female combined"
+            value="500+"
           />
           <StatCard
             icon={<ScanLine className="text-emerald-600" />}
             label="Image Dimension"
             value="512x512"
-            subtext="512x512 pixels"
           />
           <StatCard
             icon={<Users className="text-purple-600" />}
             label="Demographic"
             value="0-18 years"
-            subtext="Male & Female Minors"
           />
           <StatCard
             icon={<Database className="text-orange-600" />}
             label="Source"
             value="Dr. Anurag Gupta"
-            subtext="Hospital / Clinical Source"
           />
         </div>
 
@@ -109,7 +105,7 @@ const BoneAgeDataProvider = () => {
             <section className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
               <div className="px-6 py-5 border-b border-slate-100 flex items-center justify-between">
                 <h3 className="text-lg font-bold text-slate-900">
-                  1. Dataset Specification
+                  Dataset Specification
                 </h3>
                 <span className="px-3 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-100">
                   Ready for Use
@@ -119,7 +115,7 @@ const BoneAgeDataProvider = () => {
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-8 gap-x-12">
                   <SpecItem
                     label="Total Volume"
-                    value="400+ Images (Balanced Split)"
+                    value="500+ Images (Balanced Split)"
                   />
                   {/* <SpecItem label="File Format" value="*.png (Lossless)" /> */}
                   <SpecItem label="Image Size" value="512x512 pixels" />
@@ -127,10 +123,6 @@ const BoneAgeDataProvider = () => {
                   <SpecItem
                     label="Capture Method"
                     value="X-Ray (Radiography)"
-                  />
-                  <SpecItem
-                    label="Source Origin"
-                    value="Clinical Data (Hospital)"
                   />
                 </div>
               </div>
@@ -140,12 +132,12 @@ const BoneAgeDataProvider = () => {
             <section className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
               <div className="px-6 py-5 border-b border-slate-100">
                 <h3 className="text-lg font-bold text-slate-900">
-                  2. Labels & Metadata
+                  Labels & Metadata
                 </h3>
               </div>
               <div className="p-6 space-y-8">
                 {/* Target Label */}
-                <div className="bg-indigo-50/50 border border-indigo-100 rounded-xl p-6">
+                {/* <div className="bg-indigo-50/50 border border-indigo-100 rounded-xl p-6">
                   <div className="flex items-start gap-4">
                     <div className="p-3 bg-indigo-100 rounded-lg">
                       <Tag className="h-6 w-6 text-indigo-700" />
@@ -161,14 +153,10 @@ const BoneAgeDataProvider = () => {
                       </p>
                     </div>
                   </div>
-                </div>
+                </div> */}
 
                 {/* Metadata Table */}
                 <div>
-                  <h4 className="text-sm font-bold text-slate-900 mb-4 flex items-center gap-2">
-                    <Database size={16} className="text-slate-500" />
-                    Metadata Fields (Fairness Check)
-                  </h4>
                   <div className="overflow-hidden border border-slate-200 rounded-lg">
                     <table className="min-w-full divide-y divide-slate-200">
                       <thead className="bg-slate-50">
@@ -189,18 +177,86 @@ const BoneAgeDataProvider = () => {
                       </thead>
                       <tbody className="bg-white divide-y divide-slate-200">
                         <MetadataRow
-                          field="Image"
+                          field="Image_Vector"
                           desc="Numpy array image of the wrist"
                         />
                         <MetadataRow field="Gender" desc="Male / Female" />
                         <MetadataRow
-                          field="Age"
+                          field="Age (Target Variable)"
                           desc="0 - 18 years (Anonymized)"
                         />
                       </tbody>
                     </table>
                   </div>
                 </div>
+              </div>
+            </section>
+
+            {/* Dataset Sample Preview */}
+            <section className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+              <div className="px-6 py-5 border-b border-slate-100 bg-slate-50/50">
+                <h3 className="text-lg font-bold text-slate-900">
+                  Dataset Sample
+                </h3>
+              </div>
+              <div className="overflow-x-auto">
+                <table className="min-w-full text-sm text-left text-slate-600">
+                  <thead className="bg-slate-900 text-xs uppercase font-semibold text-slate-200">
+                    <tr>
+                      <th className="px-6 py-3 w-16 text-center">#</th>
+                      <th className="px-6 py-3">image_vector</th>
+                      <th className="px-6 py-3">Gender</th>
+                      <th className="px-6 py-3">Bone Age</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-100">
+                    {[
+                      {
+                        id: 0,
+                        vector: "0, 0, 0, 0, 0, 0, 0...",
+                        gender: "Female",
+                        age: "12.5",
+                      },
+                      {
+                        id: 1,
+                        vector: "0, 0, 0, 0, 0, 0, 0...",
+                        gender: "Female",
+                        age: "10.6",
+                      },
+                      {
+                        id: 2,
+                        vector: "0, 0, 0, 0, 0, 0, 0...",
+                        gender: "Male",
+                        age: "10.5",
+                      },
+                      {
+                        id: 3,
+                        vector: "0, 0, 0, 0, 0, 0, 0...",
+                        gender: "Female",
+                        age: "11.5",
+                      },
+                      {
+                        id: 4,
+                        vector: "0, 0, 0, 0, 0, 0, 0...",
+                        gender: "Female",
+                        age: "11.0",
+                      },
+                    ].map((row) => (
+                      <tr key={row.id} className="hover:bg-slate-50">
+                        <td className="px-6 py-3 font-mono text-xs text-slate-400">
+                          {row.id}
+                        </td>
+                        <td className="px-6 py-3 font-mono text-xs max-w-[150px] truncate">
+                          {row.vector}
+                        </td>
+                        <td className="px-6 py-3">{row.gender}</td>
+                        <td className="px-6 py-3 font-medium text-slate-900">
+                          {row.age}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
               </div>
             </section>
           </div>
@@ -246,10 +302,12 @@ const BoneAgeDataProvider = () => {
                 </ul>
               </div>
             </section>
+
+            {/* Data Preprocessing & Utilities */}
             <section className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
               <div className="px-6 py-5 border-b border-slate-100">
                 <h3 className="text-lg font-bold text-slate-900">
-                  3. Data Preprocessing & Utilities
+                  Data Preprocessing & Utilities
                 </h3>
               </div>
               <div className="p-6">
@@ -294,6 +352,35 @@ const BoneAgeDataProvider = () => {
                 </div>
               </div>
             </section>
+
+            {/* Important: Bring Your Own Dataset */}
+            <section className="bg-linear-to-r from-red-50 to-orange-50 rounded-xl border-2 border-red-200 p-6 sticky top-6">
+              <div className="flex items-start gap-4">
+                <div>
+                  <h3 className="text-lg font-bold text-red-900 mb-2">
+                    <svg
+                      className="w-6 h-6 text-red-600"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"
+                      />
+                    </svg>{" "}
+                    Important: Bring Your Own Dataset
+                  </h3>
+                  <p className="text-sm text-red-800 leading-relaxed mb-3">
+                    <strong>You must prepare your own bone age dataset</strong>{" "}
+                    in the exact format specified above to test and train your
+                    model on our federated learning platform.
+                  </p>
+                </div>
+              </div>
+            </section>
           </div>
         </div>
       </main>
@@ -307,10 +394,9 @@ interface StatCardProps {
   icon: React.ReactElement;
   label: string;
   value: string;
-  subtext: string;
 }
 
-const StatCard = ({ icon, label, value, subtext }: StatCardProps) => (
+const StatCard = ({ icon, label, value }: StatCardProps) => (
   <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-200 hover:shadow-md transition-shadow">
     <div className="flex items-center justify-between mb-4">
       <div className="p-2 bg-slate-50 rounded-lg">{icon}</div>
@@ -319,7 +405,6 @@ const StatCard = ({ icon, label, value, subtext }: StatCardProps) => (
     <p className="text-sm font-medium text-slate-500 uppercase tracking-wide mt-1">
       {label}
     </p>
-    <p className="text-xs text-slate-400 mt-2">{subtext}</p>
   </div>
 );
 
