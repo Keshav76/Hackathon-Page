@@ -63,7 +63,7 @@ const BoneAgeDataProvider = () => {
               </span>
             </div>
             <h2 className="text-3xl md:text-4xl font-bold mb-6 max-w-4xl leading-tight">
-              Predict the chronological age of patients based on X-ray images of 
+              Predict the chronological age of patients based on X-ray images of
               the wrist.
             </h2>
             <p className="text-indigo-100 text-lg max-w-3xl leading-relaxed opacity-90">
@@ -121,11 +121,8 @@ const BoneAgeDataProvider = () => {
                     label="Total Volume"
                     value="400+ Images (Balanced Split)"
                   />
-                  <SpecItem label="File Format" value="*.png (Lossless)" />
-                  <SpecItem
-                    label="Image Size"
-                    value="512x512 pixels"
-                  />
+                  {/* <SpecItem label="File Format" value="*.png (Lossless)" /> */}
+                  <SpecItem label="Image Size" value="512x512 pixels" />
                   <SpecItem label="Color Space" value="Grayscale (1-channel)" />
                   <SpecItem
                     label="Capture Method"
@@ -157,12 +154,10 @@ const BoneAgeDataProvider = () => {
                       <h4 className="text-xs font-bold text-indigo-900 uppercase tracking-wide mb-1">
                         Target Variable
                       </h4>
-                      <p className="text-lg font-bold text-indigo-900">
-                        Age
-                      </p>
+                      <p className="text-lg font-bold text-indigo-900">Age</p>
                       <p className="text-sm text-indigo-700 mt-1 leading-relaxed">
-                        Measured in Years & Months. This is the "Ground Truth"
-                        the model must learn to predict.
+                        Measured in Years. This is the "Ground Truth" the model
+                        must learn to predict.
                       </p>
                     </div>
                   </div>
@@ -230,38 +225,74 @@ const BoneAgeDataProvider = () => {
                   <li className="flex items-center gap-3">
                     <CheckCircle2
                       size={16}
-                      className="text-emerald-400 flex-shrink-0"
+                      className="text-emerald-400 shrink-0"
                     />
                     <span>No PII (Personally Identifiable Info)</span>
                   </li>
                   <li className="flex items-center gap-3">
                     <CheckCircle2
                       size={16}
-                      className="text-emerald-400 flex-shrink-0"
+                      className="text-emerald-400 shrink-0"
                     />
                     <span>Anonymized Age Codes</span>
                   </li>
                   <li className="flex items-center gap-3">
                     <CheckCircle2
                       size={16}
-                      className="text-emerald-400 flex-shrink-0"
+                      className="text-emerald-400 shrink-0"
                     />
                     <span>Secure Source (Dr. Anurag Gupta)</span>
                   </li>
                 </ul>
               </div>
             </section>
-            <section className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden"> 
+            <section className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
               <div className="px-6 py-5 border-b border-slate-100">
                 <h3 className="text-lg font-bold text-slate-900">
-                  3. Data Split Strategy
+                  3. Data Preprocessing & Utilities
                 </h3>
               </div>
               <div className="p-6">
-                <p className="text-sm text-slate-600 leading-relaxed">
-                  The dataset is split into 80% training and 20% testing sets.
+                <p className="text-sm text-slate-600 leading-relaxed mb-4">
+                  We are providing a preprocessing script which serves as a
+                  robust template for preparing your data.
                 </p>
-              </div> 
+                <ul className="space-y-3">
+                  <li className="flex items-start gap-3 text-sm text-slate-600">
+                    <div className="mt-1 w-1.5 h-1.5 rounded-full bg-indigo-500 shrink-0"></div>
+                    <span>
+                      Convert photos in a folder to required dimensions
+                    </span>
+                  </li>
+                  <li className="flex items-start gap-3 text-sm text-slate-600">
+                    <div className="mt-1 w-1.5 h-1.5 rounded-full bg-indigo-500 shrink-0"></div>
+                    <span>Store metadata in a CSV file automatically</span>
+                  </li>
+                  <li className="flex items-start gap-3 text-sm text-slate-600">
+                    <div className="mt-1 w-1.5 h-1.5 rounded-full bg-indigo-500 shrink-0"></div>
+                    <span>
+                      Merge existing data with processed data for a final CSV
+                      ready for upload on the Federated Learning platform
+                    </span>
+                  </li>
+                </ul>
+                <div className="mt-4 p-3 bg-amber-50 border border-amber-100 rounded-lg">
+                  <p className="text-xs text-amber-800 mb-2">
+                    <span className="font-semibold">Note:</span> The script is a
+                    template and will require modifications from the user to fit
+                    specific folder structures or data formats.
+                  </p>
+                  <a
+                    href="https://colab.research.google.com/drive/1_QwOS-uh4hTAe7VAFeU5wjVSu-AQxbzH?usp=sharing"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center text-xs font-medium text-indigo-600 hover:text-indigo-800 hover:underline transition-colors"
+                  >
+                    View Preprocessing Script in Google Colab
+                    <ArrowLeft className="ml-1 w-3 h-3 rotate-180" />
+                  </a>
+                </div>
+              </div>
             </section>
           </div>
         </div>
@@ -331,7 +362,7 @@ interface SplitItemProps {
 
 const SplitItem = ({ title, badge, badgeColor, desc }: SplitItemProps) => (
   <div className="relative flex items-start bg-white p-4 rounded-lg border border-slate-200 shadow-sm z-10 mb-4">
-    <div className="flex-shrink-0 mt-1">
+    <div className="shrink-0 mt-1">
       <div className="h-3 w-3 rounded-full bg-slate-400 ring-4 ring-white"></div>
     </div>
     <div className="ml-4 w-full">
