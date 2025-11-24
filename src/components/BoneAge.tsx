@@ -44,16 +44,6 @@ const BoneAgeDataProvider = () => {
                 </span>
               </div>
             </div>
-            <div className="flex gap-3">
-              <button className="inline-flex items-center px-4 py-2 border border-slate-300 shadow-sm text-sm font-medium rounded-lg text-slate-700 bg-white hover:bg-slate-50 focus:outline-none transition-colors">
-                <Info size={16} className="mr-2" />
-                Documentation
-              </button>
-              <button className="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-lg text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors">
-                <Download size={16} className="mr-2" />
-                Download Dataset
-              </button>
-            </div>
           </div>
         </div>
       </div>
@@ -73,12 +63,12 @@ const BoneAgeDataProvider = () => {
               </span>
             </div>
             <h2 className="text-3xl md:text-4xl font-bold mb-6 max-w-4xl leading-tight">
-              Predict the chronological age of patients based on X-ray images of
-              the left hand.
+              Predict the chronological age of patients based on X-ray images of 
+              the wrist.
             </h2>
             <p className="text-indigo-100 text-lg max-w-3xl leading-relaxed opacity-90">
               Develop a machine learning model using a dataset of male and
-              female minors (0-16 years) to automate pediatric bone age
+              female minors (0-18 years) to automate pediatric bone age
               assessment.
             </p>
           </div>
@@ -89,19 +79,19 @@ const BoneAgeDataProvider = () => {
           <StatCard
             icon={<FileImage className="text-blue-600" />}
             label="Total Images"
-            value="200"
-            subtext="100 Males + 100 Females"
+            value="400+"
+            subtext="Male & Female combined"
           />
           <StatCard
             icon={<ScanLine className="text-emerald-600" />}
-            label="Format"
-            value="PNG / Grayscale"
-            subtext="~3MB per image"
+            label="Image Dimension"
+            value="512x512"
+            subtext="512x512 pixels"
           />
           <StatCard
             icon={<Users className="text-purple-600" />}
             label="Demographic"
-            value="0-16 Years"
+            value="0-18 years"
             subtext="Male & Female Minors"
           />
           <StatCard
@@ -129,12 +119,12 @@ const BoneAgeDataProvider = () => {
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-8 gap-x-12">
                   <SpecItem
                     label="Total Volume"
-                    value="200 Images (Balanced Split)"
+                    value="400+ Images (Balanced Split)"
                   />
                   <SpecItem label="File Format" value="*.png (Lossless)" />
                   <SpecItem
-                    label="Average File Size"
-                    value="3MB (High Resolution)"
+                    label="Image Size"
+                    value="512x512 pixels"
                   />
                   <SpecItem label="Color Space" value="Grayscale (1-channel)" />
                   <SpecItem
@@ -168,7 +158,7 @@ const BoneAgeDataProvider = () => {
                         Target Variable
                       </h4>
                       <p className="text-lg font-bold text-indigo-900">
-                        Chronological Age
+                        Age
                       </p>
                       <p className="text-sm text-indigo-700 mt-1 leading-relaxed">
                         Measured in Years & Months. This is the "Ground Truth"
@@ -196,7 +186,7 @@ const BoneAgeDataProvider = () => {
                           </th>
                           <th
                             scope="col"
-                            className="px-6 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider"
+                            className="px-6 py-3 text -left text-xs font-semibold text-slate-500 uppercase tracking-wider"
                           >
                             Description/Values
                           </th>
@@ -204,25 +194,13 @@ const BoneAgeDataProvider = () => {
                       </thead>
                       <tbody className="bg-white divide-y divide-slate-200">
                         <MetadataRow
-                          field="Image ID"
-                          desc="Unique identifier for the image"
+                          field="Image"
+                          desc="Numpy array image of the wrist"
                         />
                         <MetadataRow field="Gender" desc="Male / Female" />
                         <MetadataRow
-                          field="Laterality"
-                          desc="Left / Right Hand"
-                        />
-                        <MetadataRow
-                          field="Quality"
-                          desc="Good / Usable / Poor"
-                        />
-                        <MetadataRow
-                          field="Source"
-                          desc="Hospital / Clinical Provider"
-                        />
-                        <MetadataRow
-                          field="Age Group"
-                          desc="0 - 16 Years (Anonymized)"
+                          field="Age"
+                          desc="0 - 18 years (Anonymized)"
                         />
                       </tbody>
                     </table>
@@ -235,54 +213,6 @@ const BoneAgeDataProvider = () => {
           {/* Right Column: Split & Info */}
           <div className="space-y-8">
             {/* Train / Test Split Strategy */}
-            <section className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden h-fit">
-              <div className="px-6 py-5 border-b border-slate-100 flex items-center gap-2">
-                <h3 className="text-lg font-bold text-slate-900">
-                  3. Split Strategy
-                </h3>
-                <HelpCircle
-                  size={16}
-                  className="text-slate-400 cursor-help"
-                  title="How the dataset is divided for development vs assessment"
-                />
-              </div>
-              <div className="p-6">
-                <p className="text-sm text-slate-600 mb-8 leading-relaxed">
-                  The dataset is divided to ensure rigorous model training and
-                  unbiased Hackathon assessment.
-                </p>
-
-                <div className="space-y-0 relative pl-2">
-                  {/* Connecting Line */}
-                  <div className="absolute top-3 bottom-8 left-[19px] w-0.5 bg-slate-100"></div>
-
-                  {/* Train */}
-                  <SplitItem
-                    title="Training Set"
-                    badge="Fully Labeled"
-                    badgeColor="bg-emerald-100 text-emerald-800"
-                    desc="Used for model development. Contains full chronological age labels."
-                  />
-
-                  {/* Validation */}
-                  <SplitItem
-                    title="Validation Set"
-                    badge="Labeled"
-                    badgeColor="bg-blue-100 text-blue-800"
-                    desc="Used for hyperparameter tuning and internal evaluation."
-                  />
-
-                  {/* Test */}
-                  <SplitItem
-                    title="Test Set (Leaderboard)"
-                    badge="Unlabeled"
-                    badgeColor="bg-amber-100 text-amber-800"
-                    desc="Held-out data for the Hackathon. Predictions are compared against hidden ground truth."
-                  />
-                </div>
-              </div>
-            </section>
-
             {/* Privacy & Compliance */}
             <section className="bg-[#1e293b] rounded-xl shadow-lg overflow-hidden text-white">
               <div className="p-6">
@@ -320,6 +250,18 @@ const BoneAgeDataProvider = () => {
                   </li>
                 </ul>
               </div>
+            </section>
+            <section className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden"> 
+              <div className="px-6 py-5 border-b border-slate-100">
+                <h3 className="text-lg font-bold text-slate-900">
+                  3. Data Split Strategy
+                </h3>
+              </div>
+              <div className="p-6">
+                <p className="text-sm text-slate-600 leading-relaxed">
+                  The dataset is split into 80% training and 20% testing sets.
+                </p>
+              </div> 
             </section>
           </div>
         </div>
