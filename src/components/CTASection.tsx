@@ -4,7 +4,10 @@ import { ArrowRight, Mail } from "lucide-react";
 
 export function CTASection() {
   return (
-    <section className="py-20 bg-linear-to-br from-blue-600 via-cyan-600 to-blue-700 relative overflow-hidden">
+    <section
+      id="cta"
+      className="py-20 bg-linear-to-br from-blue-600 via-cyan-600 to-blue-700 relative overflow-hidden"
+    >
       {/* Background Pattern */}
       <div className="absolute inset-0 opacity-10">
         <div
@@ -31,7 +34,7 @@ export function CTASection() {
           hackathon.
         </p>
 
-        <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
+        <div className="flex flex-col sm:flex-row gap-4 justify-center mb-2">
           <Button
             size="lg"
             className="cursor-pointer bg-white text-blue-600 hover:bg-blue-50 px-8 py-6 text-lg group"
@@ -45,16 +48,30 @@ export function CTASection() {
             Register Your Team
             <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
           </Button>
-          <FAQDialog className="cursor-pointer border-2 border-white bg-white hover:bg-blue-50 text-blue-600 hover:text-blue-600 px-8 py-6 text-lg" />
+          <FAQDialog className="-translate-y-px cursor-pointer bg-white hover:bg-blue-50 text-blue-600 hover:text-blue-600 px-8 py-6 text-lg" />
           <Button
             size="lg"
-            variant="outline"
-            className="cursor-pointer border-2 border-white bg-white hover:bg-blue-50 text-blue-600 hover:text-blue-600 px-8 py-6 text-lg"
+            className="cursor-pointer bg-white hover:bg-blue-50 text-blue-600 hover:text-blue-600 px-8 py-6 text-lg"
+            onClick={() =>
+              window.open("mailto:hackathon.support@nha.gov.in", "_blank")
+            }
           >
             <Mail className="mr-2 w-5 h-5" />
             Contact Us
           </Button>
-        
+        </div>
+
+        <div className="mb-12">
+          {/* Add visible email below */}
+          <p className="text-blue-100 text-sm mt-4">
+            Or email us directly:{" "}
+            <a
+              href="mailto:hackathon.support@nha.gov.in"
+              className="text-white underline"
+            >
+              hackathon.support@nha.gov.in
+            </a>
+          </p>
         </div>
 
         <div className="grid md:grid-cols-3 gap-8 text-white">

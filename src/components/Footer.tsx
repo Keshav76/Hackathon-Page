@@ -12,6 +12,14 @@ export function Footer() {
               privacy-preserving validation, and collaborative innovation.
             </p>
             <p className="text-gray-400">CDIS, IIT Kanpur</p>
+            <p className="text-gray-400">
+              <a
+                href="mailto:hackathon.support@nha.gov.in"
+                className="hover:text-white transition-colors"
+              >
+                hackathon.support@nha.gov.in
+              </a>
+            </p>
           </div>
 
           <div>
@@ -28,7 +36,24 @@ export function Footer() {
             <h4 className="text-white mb-4">Quick Links</h4>
             <ul className="space-y-2 text-gray-400">
               <li>
-                <a href="#" className="hover:text-white transition-colors">
+                <a
+                  href="#cta"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    const ctaSection = document.getElementById("cta");
+                    if (ctaSection) {
+                      const elementPosition =
+                        ctaSection.getBoundingClientRect().top;
+                      const offsetPosition =
+                        elementPosition + window.pageYOffset - 100;
+                      window.scrollTo({
+                        top: offsetPosition,
+                        behavior: "smooth",
+                      });
+                    }
+                  }}
+                  className="hover:text-white transition-colors"
+                >
                   Register
                 </a>
               </li>
@@ -43,8 +68,12 @@ export function Footer() {
                 </a>
               </li>
               <li>
-                <a href="#" className="hover:text-white transition-colors">
-                  Contact
+                <a
+                  href="mailto:hackathon.support@nha.gov.in"
+                  target="_blank"
+                  className="hover:text-white transition-colors"
+                >
+                  Contact Us
                 </a>
               </li>
             </ul>

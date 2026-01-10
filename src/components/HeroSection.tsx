@@ -49,14 +49,14 @@ export function HeroSection() {
           <div className="hidden sm:block w-1 h-1 rounded-full bg-cyan-400"></div>
           <div className="flex items-center gap-2 text-cyan-100">
             <MapPin className="w-5 h-5" />
-            <span>CDIS, IIT Kanpur / Online</span>
+            <span>IIT Kanpur / Online (Hybrid)</span>
           </div>
         </div>
 
         <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
           <Button
             size="lg"
-            className="cursor-pointer bg-cyan-500 hover:bg-cyan-600 text-white px-8 py-6 text-lg"
+            className="cursor-pointer bg-cyan-500 hover:bg-cyan-600 text-white px-6 py-6 text-lg"
             onClick={() =>
               window.open(
                 "https://docs.google.com/forms/d/e/1FAIpQLScM9IN0b867oAN0xke3nLya7IJJS5iqc7YlMkUHJzDzOfasFQ/viewform",
@@ -69,7 +69,7 @@ export function HeroSection() {
           <Button
             size="lg"
             variant="outline"
-            className="cursor-pointer border-2 border-white bg-gray-100 hover:bg-white text-blue-900 hover:text-blue-900 px-8 py-6 text-lg"
+            className="cursor-pointer bg-gray-100 hover:bg-white text-blue-900 hover:text-blue-900 px-6 py-6 text-lg"
             onClick={() => {
               const aboutSection = document.getElementById("about");
               if (aboutSection) {
@@ -79,7 +79,10 @@ export function HeroSection() {
           >
             Learn More
           </Button>
-          <FAQDialog className="cursor-pointer border-2 border-cyan-400/60 bg-white/10 hover:bg-cyan-400 text-white hover:text-blue-900 px-8 py-6 text-lg" />
+          <FAQDialog
+            className="cursor-pointer bg-gray-100 hover:bg-white text-blue-900 hover:text-blue-900 px-6 py-6 text-lg"
+            noSymbol={true}
+          />
         </div>
       </div>
 
