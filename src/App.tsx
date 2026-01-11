@@ -5,11 +5,14 @@ import { TrilemmaSection } from "./components/TrilemmaSection";
 import { SolutionSection } from "./components/SolutionSection";
 import { DPGsSection } from "./components/DPGsSection";
 import { HackathonSection } from "./components/HackathonSection";
+import { SubmissionSection } from "./components/SubmissionSection";
 import { CTASection } from "./components/CTASection";
 import { Footer } from "./components/Footer";
 import BoneAgeDataProvider from "./components/BoneAge";
 import Cataract from "./components/Cataract";
 import DiabeticRetinopathy from "./components/DiabeticRetinopathy";
+import SubmissionPage from "./components/SubmissionPage";
+import DatasetUploadPage from "./components/DatasetUploadPage";
 import ScrollToTop from "./components/ScrollToTop";
 
 function HomePage() {
@@ -21,6 +24,7 @@ function HomePage() {
       <TrilemmaSection />
       <SolutionSection />
       <DPGsSection />
+      <SubmissionSection />
       <CTASection />
       <Footer />
     </div>
@@ -36,6 +40,8 @@ export default function App() {
         <Route path="/bone-age" element={<BoneAgeDataProvider />} />
         <Route path="/cataract" element={<Cataract />} />
         <Route path="/diabetic-retinopathy" element={<DiabeticRetinopathy />} />
+        <Route path="/submission" element={<SubmissionPage />} />
+        <Route path="/dataset-upload" element={<DatasetUploadPage />} />
       </Routes>
     </>
   );
