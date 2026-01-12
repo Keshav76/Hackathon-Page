@@ -1,6 +1,6 @@
 import { Button } from "./ui/button";
-import { Upload, ArrowRight, Database } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { Upload, ArrowRight, Database, BookOpen } from "lucide-react";
+import { useNavigate, Link } from "react-router-dom";
 
 export function SubmissionSection() {
   const navigate = useNavigate();
@@ -29,9 +29,16 @@ export function SubmissionSection() {
                 <h3 className="text-xl font-semibold text-slate-900 mb-2">
                   Want to submit your solution?
                 </h3>
-                <p className="text-slate-600">
+                <p className="text-slate-600 mb-3">
                   Submit your team's solution with code and model files. Upload your tar.gz file and complete the submission form.
                 </p>
+                <Link
+                  to="/submission-guidelines"
+                  className="inline-flex items-center gap-1.5 text-indigo-600 hover:text-indigo-700 font-medium transition-colors bg-indigo-50 hover:bg-indigo-100 px-3 py-1.5 rounded-lg"
+                >
+                  <BookOpen className="w-4 h-4" />
+                  View Submission Guidelines
+                </Link>
               </div>
               <div className="shrink-0">
                 <Button

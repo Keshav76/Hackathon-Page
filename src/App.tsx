@@ -14,6 +14,7 @@ import Cataract from "./components/Cataract";
 import DiabeticRetinopathy from "./components/DiabeticRetinopathy";
 import SubmissionPage from "./components/SubmissionPage";
 import DatasetUploadPage from "./components/DatasetUploadPage";
+import SubmissionGuidelinesPage from "./components/SubmissionGuidelinesPage";
 import ScrollToTop from "./components/ScrollToTop";
 
 function HomePage() {
@@ -44,6 +45,7 @@ export default function App() {
         <Route path="/diabetic-retinopathy" element={<DiabeticRetinopathy />} />
         <Route path="/submission" element={<SubmissionPage />} />
         <Route path="/dataset-upload" element={<DatasetUploadPage />} />
+        <Route path="/submission-guidelines" element={<SubmissionGuidelinesPage />} />
       </Routes>
     </>
   );

@@ -1,6 +1,6 @@
 import React, { useState, FormEvent } from "react";
-import { useNavigate } from "react-router-dom";
-import { ArrowLeft, Upload, Loader2, CheckCircle2, XCircle, FileText } from "lucide-react";
+import { useNavigate, Link } from "react-router-dom";
+import { ArrowLeft, Upload, Loader2, CheckCircle2, XCircle, BookOpen } from "lucide-react";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
@@ -178,10 +178,17 @@ export default function SubmissionPage() {
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Submission Form Section */}
         <section className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden mb-8">
-          <div className="px-6 py-5 border-b border-slate-100">
+          <div className="px-6 py-5 border-b border-slate-100 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
             <h3 className="text-lg font-bold text-slate-900">
               Submission Form
             </h3>
+            <Link
+              to="/submission-guidelines"
+              className="inline-flex items-center gap-1.5 text-indigo-600 hover:text-indigo-700 font-medium transition-colors bg-indigo-50 hover:bg-indigo-100 px-3 py-1.5 rounded-lg text-sm"
+            >
+              <BookOpen className="w-4 h-4" />
+              View Submission Guidelines
+            </Link>
           </div>
 
           <form onSubmit={handleSubmit} className="p-6">
