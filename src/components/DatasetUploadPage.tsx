@@ -77,7 +77,7 @@ export default function DatasetUploadPage() {
       formData.append("datasetType", datasetType);
       formData.append("file", file);
 
-      const response = await fetch("/dhs-hackathon/upload/data", {
+      const response = await fetch("/dhs-hackathon/data", {
         method: "POST",
         body: formData,
       });
