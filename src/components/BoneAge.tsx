@@ -1,4 +1,4 @@
-import React from "react";
+import { ReactElement } from "react";
 import {
   ArrowLeft,
   FileImage,
@@ -399,7 +399,7 @@ const BoneAgeDataProvider = () => {
 // --- Helper Components ---
 
 interface StatCardProps {
-  icon: React.ReactElement;
+  icon: ReactElement;
   label: string;
   value: string;
 }
