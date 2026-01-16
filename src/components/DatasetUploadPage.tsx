@@ -93,7 +93,7 @@ export default function DatasetUploadPage() {
       formData.append("email", email.trim());
       formData.append("file", file);
 
-      const response = await fetch("/data", {
+      const response = await fetch("/dhs-hackathon/data", {
         method: "POST",
         body: formData,
       });

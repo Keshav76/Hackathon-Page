@@ -138,7 +138,7 @@ export default function SubmissionPage() {
       formData.append("commitMessage", commitMessage.trim());
       formData.append("file", file);
 
-      const response = await fetch("/upload", {
+      const response = await fetch("/dhs-hackathon/upload", {
         method: "POST",
         body: formData,
       });
