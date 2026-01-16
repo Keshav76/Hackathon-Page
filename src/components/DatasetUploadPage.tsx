@@ -16,6 +16,7 @@ export default function DatasetUploadPage() {
   const navigate = useNavigate();
   const [submitterName, setSubmitterName] = useState("");
   const [datasetType, setDatasetType] = useState("");
+  const [email, setEmail] = useState("");
   const [file, setFile] = useState<File | null>(null);
   const [fileError, setFileError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -61,6 +62,20 @@ export default function DatasetUploadPage() {
       return;
     }
 
+    if (!email.trim()) {
+      setSubmitStatus("error");
+      setSubmitMessage("Please enter your email address");
+      return;
+    }
+
+    // Basic email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email.trim())) {
+      setSubmitStatus("error");
+      setSubmitMessage("Please enter a valid email address");
+      return;
+    }
+
     if (!file) {
       setSubmitStatus("error");
       setSubmitMessage("Please upload a CSV file");
@@ -75,18 +90,20 @@ export default function DatasetUploadPage() {
       const formData = new FormData();
       formData.append("submitterName", submitterName.trim());
       formData.append("datasetType", datasetType);
+      formData.append("email", email.trim());
       formData.append("file", file);
 
-      const response = await fetch("/dhs-hackathon/data", {
+      const response = await fetch("/data", {
         method: "POST",
         body: formData,
       });
 
-      if (!response.ok) {
-        throw new Error(`Server error: ${response.status}`);
-      }
+      const responseData = await response.json().catch(() => ({}));
 
-      await response.json().catch(() => ({}));
+      if (!response.ok) {
+        const errorMessage = responseData.message || `Server error: ${response.status}`;
+        throw new Error(errorMessage);
+      }
 
       setSubmitStatus("success");
       setSubmitMessage("Dataset uploaded successfully! Redirecting...");
@@ -186,6 +203,23 @@ export default function DatasetUploadPage() {
                     <SelectItem value="CD">CD (Cataract Detection)</SelectItem>
                   </SelectContent>
                 </Select>
+              </div>
+
+              {/* Email */}
+              <div className="space-y-2">
+                <Label htmlFor="email" className="text-sm font-medium text-slate-700">
+                  Email Address <span className="text-red-500">*</span>
+                </Label>
+                <Input
+                  id="email"
+                  type="email"
+                  placeholder="Enter your email address"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  disabled={isSubmitting}
+                  required
+                  className="w-full"
+                />
               </div>
 
               {/* File Upload */}

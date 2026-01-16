@@ -32,6 +32,8 @@ export default function SubmissionPage() {
   const [problemStatement, setProblemStatement] = useState("");
   const [usedLibrary, setUsedLibrary] = useState("");
   const [usedLibraryOther, setUsedLibraryOther] = useState("");
+  const [email, setEmail] = useState("");
+  const [commitMessage, setCommitMessage] = useState("");
   const [file, setFile] = useState<File | null>(null);
   const [fileError, setFileError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -95,6 +97,26 @@ export default function SubmissionPage() {
       return;
     }
 
+    if (!email.trim()) {
+      setSubmitStatus("error");
+      setSubmitMessage("Please enter your email address");
+      return;
+    }
+
+    // Basic email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email.trim())) {
+      setSubmitStatus("error");
+      setSubmitMessage("Please enter a valid email address");
+      return;
+    }
+
+    if (!commitMessage.trim()) {
+      setSubmitStatus("error");
+      setSubmitMessage("Please enter a commit message");
+      return;
+    }
+
     if (!file) {
       setSubmitStatus("error");
       setSubmitMessage("Please upload a file");
@@ -112,18 +134,21 @@ export default function SubmissionPage() {
       // Convert full problem statement name to short form for backend
       formData.append("problemStatement", problemStatementMap[problemStatement] || problemStatement);
       formData.append("usedLibrary", usedLibrary === "Others" ? usedLibraryOther : usedLibrary);
+      formData.append("email", email.trim());
+      formData.append("commitMessage", commitMessage.trim());
       formData.append("file", file);
 
-      const response = await fetch("/dhs-hackathon/upload", {
+      const response = await fetch("/upload", {
         method: "POST",
         body: formData,
       });
 
-      if (!response.ok) {
-        throw new Error(`Server error: ${response.status}`);
-      }
+      const responseData = await response.json().catch(() => ({}));
 
-      const data = await response.json().catch(() => ({}));
+      if (!response.ok) {
+        const errorMessage = responseData.message || `Server error: ${response.status}`;
+        throw new Error(errorMessage);
+      }
 
       setSubmitStatus("success");
       setSubmitMessage("Submission successful! Thank you for your submission. Redirecting...");
@@ -286,6 +311,40 @@ export default function SubmissionPage() {
                     className="w-full mt-2"
                   />
                 )}
+              </div>
+
+              {/* Email */}
+              <div className="space-y-2">
+                <Label htmlFor="email" className="text-sm font-medium text-slate-700">
+                  Email Address <span className="text-red-500">*</span>
+                </Label>
+                <Input
+                  id="email"
+                  type="email"
+                  placeholder="Enter your email address"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  disabled={isSubmitting}
+                  required
+                  className="w-full"
+                />
+              </div>
+
+              {/* Commit Message */}
+              <div className="space-y-2">
+                <Label htmlFor="commitMessage" className="text-sm font-medium text-slate-700">
+                  Commit Message <span className="text-red-500">*</span>
+                </Label>
+                <Input
+                  id="commitMessage"
+                  type="text"
+                  placeholder="Enter a commit message"
+                  value={commitMessage}
+                  onChange={(e) => setCommitMessage(e.target.value)}
+                  disabled={isSubmitting}
+                  required
+                  className="w-full"
+                />
               </div>
 
               {/* File Upload */}
