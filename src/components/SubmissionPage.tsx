@@ -70,7 +70,7 @@ export default function SubmissionPage() {
         {/* Coming Soon Card */}
         <div className="bg-white rounded-3xl border border-slate-200 shadow-xl shadow-slate-200/50 overflow-hidden">
           <div className="p-12 text-center">
-            <div className="inline-flex items-center justify-center w-24 h-24 rounded-full bg-gradient-to-br from-indigo-100 to-purple-100 mb-8">
+            <div className="inline-flex items-center justify-center w-24 h-24 rounded-full bg-linear-to-br from-indigo-100 to-purple-100 mb-8">
               <Calendar className="w-12 h-12 text-indigo-600" />
             </div>
 

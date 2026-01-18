@@ -1,4 +1,4 @@
-import { ReactElement } from "react";
+import { ReactElement, useState, useEffect } from "react";
 import {
   ArrowLeft,
   FileImage,
@@ -9,11 +9,140 @@ import {
   CheckCircle2,
   ShieldCheck,
   Download,
+  Loader2,
+  X,
+  SearchCode,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { parquetReadObjects } from "hyparquet";
+
+interface SampleRow {
+  id: string;
+  image_vector: string;
+  label: string;
+}
+
+/**
+ * Converts a flattened RGB image vector string (512x512x3) to a base64 data URL
+ * @param vectorString - Comma-separated string of RGB pixel values (0-255)
+ * @param width - Width of the image (default: 512)
+ * @param height - Height of the image (default: 512)
+ * @returns base64 data URL that can be used as img src
+ */
+const vectorToRGBImageUrl = (
+  vectorString: string,
+  width: number = 512,
+  height: number = 512
+): string => {
+  try {
+    // Parse the comma-separated string into an array of numbers
+    const pixels = vectorString.split(",").map((val) => parseInt(val.trim(), 10));
+
+    // Create an off-screen canvas
+    const canvas = document.createElement("canvas");
+    canvas.width = width;
+    canvas.height = height;
+
+    const ctx = canvas.getContext("2d");
+    if (!ctx) {
+      console.error("Failed to get canvas context");
+      return "";
+    }
+
+    // Create ImageData object
+    const imageData = ctx.createImageData(width, height);
+    const data = imageData.data;
+
+    // For RGB image (512x512x3), the vector has width*height*3 values
+    // Fill the ImageData: R, G, B values come from consecutive positions in the vector
+    for (let i = 0; i < width * height; i++) {
+      const rIdx = i * 3;
+      const gIdx = rIdx + 1;
+      const bIdx = rIdx + 2;
+
+      const idx = i * 4; // ImageData uses RGBA format (4 values per pixel)
+
+      data[idx] = Math.min(255, Math.max(0, pixels[rIdx] || 0)); // R
+      data[idx + 1] = Math.min(255, Math.max(0, pixels[gIdx] || 0)); // G
+      data[idx + 2] = Math.min(255, Math.max(0, pixels[bIdx] || 0)); // B
+      data[idx + 3] = 255; // A (fully opaque)
+    }
+
+    // Put the image data on the canvas
+    ctx.putImageData(imageData, 0, 0);
+
+    // Convert canvas to base64 data URL
+    return canvas.toDataURL("image/png");
+  } catch (error) {
+    console.error("Error converting vector to image:", error);
+    return "";
+  }
+};
 
 const Cataract = () => {
   const navigate = useNavigate();
+  const [sampleData, setSampleData] = useState<SampleRow[] | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [loadError, setLoadError] = useState<string | null>(null);
+  const [selectedImageUrl, setSelectedImageUrl] = useState<string | null>(null);
+
+  useEffect(() => {
+    const loadParquetData = async () => {
+      try {
+        setIsLoading(true);
+        setLoadError(null);
+
+        // Use import.meta.env.BASE_URL to handle the configured base path (/dhs/hackathon/)
+        const baseUrl = import.meta.env.BASE_URL;
+        const fileUrl = `${baseUrl}datasets/cataract-sample.parquet`.replace(/\/+/g, "/"); // Normalize slashes
+        
+        const response = await fetch(fileUrl);
+        if (!response.ok) {
+          throw new Error(`Failed to fetch parquet file: ${response.status} ${response.statusText}`);
+        }
+        const arrayBuffer = await response.arrayBuffer();
+
+        // Read all rows as objects
+        const data = await parquetReadObjects({
+          file: arrayBuffer,
+          columns: [
+            "id",
+            "image_vector",
+            "label",
+          ],
+        }) as Record<string, any>[];
+
+        // Transform to SampleRow format, ensuring string conversion
+        const rows: SampleRow[] = data.map((row) => ({
+          id: String(row.id || ""),
+          image_vector: String(row.image_vector || ""),
+          label: String(row.label || ""),
+        }));
+
+        setSampleData(rows);
+      } catch (error) {
+        console.error("Error loading parquet file:", error);
+        setLoadError(
+          error instanceof Error ? error.message : "Failed to load sample data"
+        );
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    loadParquetData();
+  }, []);
+
+  // Handle ESC key to close modal
+  useEffect(() => {
+    const handleEsc = (e: KeyboardEvent) => {
+      if (e.key === "Escape" && selectedImageUrl) {
+        setSelectedImageUrl(null);
+      }
+    };
+    window.addEventListener("keydown", handleEsc);
+    return () => window.removeEventListener("keydown", handleEsc);
+  }, [selectedImageUrl]);
 
   const goBack = () => {
     navigate("/");
@@ -62,8 +191,8 @@ const Cataract = () => {
                 Download Training Dataset
               </button>
               <a
-                href="/dhs/hackathon/datasets/cataract-sample.csv"
-                download="cataract-sample.csv"
+                href="/dhs/hackathon/datasets/cataract-sample.parquet"
+                download="cataract-sample.parquet"
                 className="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-lg text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors"
               >
                 <Download size={16} className="mr-2" />
@@ -102,7 +231,12 @@ const Cataract = () => {
         </div>
 
         {/* Key Metrics Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 mb-8">
+        <StatCard
+            icon={<SearchCode className="text-red-600" />}
+            label="Current Benchmark"
+            value="0.85 F1 Score"
+          />
           <StatCard
             icon={<FileImage className="text-blue-600" />}
             label="Total Images"
@@ -205,56 +339,63 @@ const Cataract = () => {
                 </h3>
               </div>
               <div className="overflow-x-auto">
-                <table className="min-w-full text-sm text-left text-slate-600">
-                  <thead className="bg-slate-900 text-xs uppercase font-semibold text-slate-200">
-                    <tr>
-                      <th className="px-6 py-3 w-16 text-center">#</th>
-                      <th className="px-6 py-3">image_vector</th>
-                      <th className="px-6 py-3">Cataract Type</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-slate-100">
-                    {[
-                      {
-                        id: 0,
-                        vector: "0, 0, 0, 0, 0, 0, 0...",
-                        type: "Immature Cataract",
-                      },
-                      {
-                        id: 1,
-                        vector: "0, 0, 0, 0, 0, 0, 0...",
-                        type: "Immature Cataract",
-                      },
-                      {
-                        id: 2,
-                        vector: "0, 0, 0, 0, 0, 0, 0...",
-                        type: "Immature Cataract",
-                      },
-                      {
-                        id: 3,
-                        vector: "0, 0, 0, 0, 0, 0, 0...",
-                        type: "Immature Cataract",
-                      },
-                      {
-                        id: 4,
-                        vector: "0, 0, 0, 0, 0, 0, 0...",
-                        type: "Immature Cataract",
-                      },
-                    ].map((row) => (
-                      <tr key={row.id} className="hover:bg-slate-50">
-                        <td className="px-6 py-3 font-mono text-xs text-slate-400">
-                          {row.id}
-                        </td>
-                        <td className="px-6 py-3 font-mono text-xs max-w-[150px] truncate">
-                          {row.vector}
-                        </td>
-                        <td className="px-6 py-3 font-medium text-slate-900">
-                          {row.type}
-                        </td>
+                {isLoading && (
+                  <div className="p-12 text-center">
+                    <Loader2 className="w-8 h-8 animate-spin text-indigo-600 mx-auto mb-4" />
+                    <p className="text-sm text-slate-600">Loading sample data...</p>
+                  </div>
+                )}
+                {loadError && (
+                  <div className="p-12 text-center">
+                    <p className="text-sm text-red-600">Error: {loadError}</p>
+                  </div>
+                )}
+                {!isLoading && !loadError && sampleData && (
+                  <table className="min-w-full text-sm text-left text-slate-600">
+                    <thead className="bg-slate-900 text-xs uppercase font-semibold text-slate-200">
+                      <tr>
+                        <th className="px-6 py-3">ID</th>
+                        <th className="px-6 py-3 text-center w-24">Preview</th>
+                        <th className="px-6 py-3">image_vector</th>
+                        <th className="px-6 py-3">Cataract Type</th>
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
+                    </thead>
+                    <tbody className="divide-y divide-slate-100">
+                      {sampleData.map((row, idx) => {
+                        const trimmedVector =
+                          row.image_vector.length > 25
+                            ? row.image_vector.substring(0, 25) + "..."
+                            : row.image_vector;
+                        const imageUrl = vectorToRGBImageUrl(row.image_vector);
+                        return (
+                          <tr key={idx} className="hover:bg-slate-50">
+                            <td className="px-6 py-3 font-mono text-xs text-slate-900">
+                              {row.id}
+                            </td>
+                            <td className="px-6 py-3 text-center">
+                              {imageUrl ? (
+                                <img
+                                  src={imageUrl}
+                                  alt={`Preview ${idx + 1}`}
+                                  className="w-16 h-16 object-contain mx-auto rounded cursor-pointer hover:opacity-80 transition-opacity"
+                                  onClick={() => setSelectedImageUrl(imageUrl)}
+                                />
+                              ) : (
+                                <span className="text-slate-400 text-xs">N/A</span>
+                              )}
+                            </td>
+                            <td className="px-6 py-3 font-mono text-xs max-w-[200px] truncate text-slate-600">
+                              {trimmedVector}
+                            </td>
+                            <td className="px-6 py-3 font-medium text-slate-900">
+                              {row.label}
+                            </td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                )}
               </div>
             </section>
           </div>
@@ -317,18 +458,22 @@ const Cataract = () => {
                   <li className="flex items-start gap-3 text-sm text-slate-600">
                     <div className="mt-1 w-1.5 h-1.5 rounded-full bg-indigo-500 shrink-0"></div>
                     <span>
-                      Convert photos in a folder to required dimensions
+                      <strong>Generate Parquet Dataset:</strong> Reads images and
+                      labels to create a single, memory-efficient Parquet file.
                     </span>
                   </li>
                   <li className="flex items-start gap-3 text-sm text-slate-600">
                     <div className="mt-1 w-1.5 h-1.5 rounded-full bg-indigo-500 shrink-0"></div>
-                    <span>Store metadata in a CSV file automatically</span>
+                    <span>
+                      <strong>Automated Preprocessing:</strong> Resizes and pads
+                      images to 512x512x3 RGB format automatically.
+                    </span>
                   </li>
                   <li className="flex items-start gap-3 text-sm text-slate-600">
                     <div className="mt-1 w-1.5 h-1.5 rounded-full bg-indigo-500 shrink-0"></div>
                     <span>
-                      Merge existing data with processed data for a final CSV
-                      ready for upload on the Federated Learning platform
+                      <strong>Memory Efficient:</strong> Processes and writes data
+                      in batches to handle large datasets effectively.
                     </span>
                   </li>
                 </ul>
@@ -339,7 +484,7 @@ const Cataract = () => {
                     specific folder structures or data formats.
                   </p>
                   <a
-                    href="https://colab.research.google.com/drive/1_QwOS-uh4hTAe7VAFeU5wjVSu-AQxbzH?usp=sharing"
+                    href="https://colab.research.google.com/drive/17nmx5CpD6R7Pz5kABwMqnlVaUUimB0iA?usp=sharing"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="inline-flex items-center text-xs font-medium text-indigo-600 hover:text-indigo-800 hover:underline transition-colors"
@@ -382,6 +527,32 @@ const Cataract = () => {
           </div>
         </div>
       </main>
+
+      {/* Image Preview Modal */}
+      {selectedImageUrl && (
+        <div
+          className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4"
+          onClick={() => setSelectedImageUrl(null)}
+        >
+          <div
+            className="relative max-w-4xl max-h-[90vh] bg-white rounded-lg overflow-hidden"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button
+              onClick={() => setSelectedImageUrl(null)}
+              className="absolute top-4 right-4 p-2 bg-white/90 hover:bg-white rounded-full shadow-lg transition-colors z-10"
+              aria-label="Close preview"
+            >
+              <X className="w-6 h-6 text-slate-900" />
+            </button>
+            <img
+              src={selectedImageUrl}
+              alt="Full size preview"
+              className="w-full h-full object-contain max-h-[90vh]"
+            />
+          </div>
+        </div>
+      )}
     </div>
   );
 };

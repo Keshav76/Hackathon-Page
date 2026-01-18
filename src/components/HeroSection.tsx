@@ -58,17 +58,17 @@ export function HeroSection() {
         <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
           <Button
             size="lg"
-            className="cursor-pointer bg-cyan-500 hover:bg-cyan-600 text-white px-6 py-6 text-lg"
-            onClick={() => navigate("/submission")}
+            className="cursor-pointer bg-gray-100 hover:bg-white text-blue-900 hover:text-blue-90 px-6 py-6 text-lg"
+            onClick={() => navigate("#about")}
           >
-            Submit Model
+            Learn More
           </Button>
           <Button
             size="lg"
             className="cursor-pointer bg-cyan-500 hover:bg-cyan-600 text-white px-6 py-6 text-lg"
-            onClick={() => navigate("/dataset-upload")}
+            onClick={() => navigate("#submission-section")}
           >
-            Share Dataset
+            Make Submissions
           </Button>
           <FAQDialog
             className="cursor-pointer bg-gray-100 hover:bg-white text-blue-900 hover:text-blue-900 px-6 py-6 text-lg"
