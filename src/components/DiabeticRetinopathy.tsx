@@ -194,13 +194,14 @@ const DiabeticRetinopathy = () => {
               </div>
             </div>
             <div className="flex gap-3">
-            <button
-                disabled={true}
-                className="inline-flex items-center px-4 py-2 border border-slate-300 shadow-sm text-sm font-medium rounded-lg text-slate-700 bg-white hover:bg-slate-50 focus:outline-none transition-colors disabled:opacity-50 disabled:cursor-not-allowed cursor-not-allowed"
+              <a
+                href="/dhs/hackathon/datasets/dr-training-dataset.parquet"
+                download="dr-training-dataset.parquet"
+                className="inline-flex items-center px-4 py-2 border border-slate-300 shadow-sm text-sm font-medium rounded-lg text-slate-700 bg-white hover:bg-slate-50 focus:outline-none transition-colors"
               >
                 <Download size={16} className="mr-2" />
                 Download Training Dataset
-              </button>
+              </a>
               <a
                 href="/dhs/hackathon/datasets/dr-sample.parquet"
                 download="dr-sample.parquet"
